@@ -183,7 +183,7 @@ class FeignSpecification extends Specification {
     }
 
     /*
-     *  Dziękuję za uwagę
+     *  Dziękuję za uwagę :)
      */
 }
 
