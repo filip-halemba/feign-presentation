@@ -24,13 +24,11 @@ class FeignSpecification extends Specification {
      */
 
     def URL = "http://localhost:8080/dev";
-    def JSON = """[{"id":1,"name":"Martin Fowler"},{"id":2,"name":"Uncle Bob"}]"""
-
     /**
      *  Zaczynamy
      */
 
-    def "Najprostszy przykład Feign"() {
+    def "1. Najprostszy przykład Feign"() {
         given:
         def client = Feign.builder().target(DeveloperApi.class, URL)
 
@@ -38,11 +36,11 @@ class FeignSpecification extends Specification {
         String apiResponse = client.getAsString()
 
         then:
-        apiResponse == JSON
+        apiResponse == """[{"id":1,"name":"Martin Fowler"},{"id":2,"name":"Uncle Bob"}]"""
     }
 
 
-    def "Dodanie loggera"() {
+    def "2. Dodanie loggera"() {
         given:
         def client = Feign.builder()
                           .logger(new Logger.ErrorLogger())
@@ -53,7 +51,7 @@ class FeignSpecification extends Specification {
         String apiResponse = client.getAsString()
 
         then:
-        apiResponse == JSON
+        apiResponse == """[{"id":1,"name":"Martin Fowler"},{"id":2,"name":"Uncle Bob"}]"""
     }
 
 
@@ -61,7 +59,7 @@ class FeignSpecification extends Specification {
         return (new Random().nextLong() * 10).toString()
     }
 
-    def "Dodanie headera do każdego zapytania"() {
+    def "3. Dodanie headera do każdego zapytania"() {
         given:
         def client = Feign.builder()
                           .logger(new Logger.ErrorLogger())
@@ -74,7 +72,7 @@ class FeignSpecification extends Specification {
         client.getAsString()
 
         then:
-        apiResponse == JSON
+        apiResponse == """[{"id":1,"name":"Martin Fowler"},{"id":2,"name":"Uncle Bob"}]"""
     }
 
     /**
@@ -87,7 +85,7 @@ class FeignSpecification extends Specification {
                                 .logLevel(Logger.Level.FULL)
                                 .logger(new Logger.ErrorLogger())
 
-    def "Deserializacja obiektów poprzez decoder"() {
+    def "4. Deserializacja obiektów poprzez decoder"() {
         given:
         def client = clientWithLogger.decoder(new GsonDecoder())
                                      .target(DeveloperApi.class, URL)
@@ -100,7 +98,7 @@ class FeignSpecification extends Specification {
     }
 
 
-    def "Dodanie parametru do zapytania"() {
+    def "5. Dodanie parametru do zapytania"() {
         given:
         def client = clientWithLogger.decoder(new GsonDecoder())
                                      .target(DeveloperApi.class, URL)
@@ -113,7 +111,7 @@ class FeignSpecification extends Specification {
     }
 
 
-    def "Domyślne metody w java 8"() {
+    def "6. Domyślne metody w java 8"() {
         given:
         def client = clientWithLogger.decoder(new GsonDecoder())
                                      .target(DeveloperApi.class, URL)
@@ -126,7 +124,7 @@ class FeignSpecification extends Specification {
     }
 
 
-    def "Przykład HTTP post"() {
+    def "7. Przykład HTTP post"() {
         given:
         def client = clientWithLogger.decoder(new GsonDecoder())
                                      .encoder(new GsonEncoder())
@@ -147,7 +145,7 @@ class FeignSpecification extends Specification {
      */
 
 
-    def "Bądź reaktywny"() {
+    def "8. Bądź reaktywny"() {
         given:
         def client = HystrixFeign.builder().logger(new Logger.ErrorLogger())
                                  .logLevel(Logger.Level.FULL)
@@ -158,11 +156,11 @@ class FeignSpecification extends Specification {
         client.beReactive()
               .toBlocking()
               .subscribe { println it }
-        then "Ale nie pisz takich testów"
+        then: "Ale nie pisz takich testów"
         true
     }
 
-    def "Bądź reaktywny i pisz dobre testy"() {
+    def "9. Bądź reaktywny i pisz dobre testy"() {
         given:
         TestSubscriber<Developer> testSubscriber = new TestSubscriber<>();
 

@@ -24,7 +24,7 @@ public interface DeveloperApi {
     Developer getById(@Param("id") Integer id);
 
     default Developer getTheBestDeveloper() {
-     return getById(2);
+        return getById(2);
     }
 
     @RequestLine("POST /")
